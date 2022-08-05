@@ -46,8 +46,7 @@ engine = create_engine("postgresql://test_user:1234@postgres:5432/sourse_db")
 # Creating tables
 # df_company
 engine.execute("""
-DROP TABLE IF EXISTS companies;
-CREATE TABLE IF NOT EXISTS companies (
+CREATE TABLE companies (
     id int not null,
     name varchar(255),
     created_at date
@@ -56,8 +55,7 @@ CREATE TABLE IF NOT EXISTS companies (
 
 # df_employee
 engine.execute("""
-DROP TABLE IF EXISTS employees;
-CREATE TABLE IF NOT EXISTS employees (
+CREATE TABLE IF employees (
     first_name varchar(255),
     last_name varchar(255),
     company_id int,
