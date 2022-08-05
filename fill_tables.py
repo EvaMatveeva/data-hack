@@ -41,9 +41,7 @@ for j in range(n):
     l = [first_name, last_name, company_id, phone, start_at, end_at]
     df_employee.loc[j] = l
 
-
-# Creating engine
-engine = create_engine("postgresql://test_user:1234@localhost:5432/sourse_db")
+engine = create_engine("postgresql://test_user:1234@postgres:5432/sourse_db")
 
 # Creating tables
 # df_company
@@ -70,7 +68,5 @@ CREATE TABLE IF NOT EXISTS employees (
     """)
 
 # Filling tables
-
 df_company.to_sql('companies', con=engine, if_exists='append', index=False)
-
 df_employee.to_sql('employees', con=engine, if_exists='append', index=False)
