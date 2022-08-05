@@ -2,10 +2,9 @@ from sqlalchemy import create_engine
 import pandas as pd
 from faker import Faker
 
-engine = create_engine("postgresql://test_user:1234@localhost:5432/sourse_db")
+engine = create_engine("postgresql://test_user:1234@postgres:5432/sourse_db")
 
 engine.execute("""
-DROP TABLE companies;
 CREATE TABLE IF NOT EXISTS companies (
     id int,
     name varchar(255),
@@ -19,14 +18,13 @@ engine.execute("""
 """)
 
 engine.execute("""
-DROP TABLE address;
-CREATE TABLE IF NOT EXISTS address (
+CREATE TABLE IF NOT EXISTS public.address (
     id int,
     address varchar
     )
     """)
 
 engine.execute("""
-    INSERT INTO address
+    INSERT INTO public.address
     VALUES (1, 'Moscow')
 """)
