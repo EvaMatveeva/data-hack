@@ -28,7 +28,26 @@ class CSVReader(AbstractReader):
             for batch in reader:
                 yield batch
 
+class PGReader(AbstractReader):
+    def __init__(self, config) -> None:
+        super().__init__(config)
+        self.fields_names = ', '.join(config["fields"].keys())
+        self.source_table = config["source_table"]
+        self.key_column = config["key_column"]
+
+    def read(self):
+        i = 0
+        while True:
+            SQL = f"""
+            select {fields_names} from {source_table} where {key_column} between {i * batch_size} and {(i + 1) * batch_size - 1}
+            """
+            df = pd.read_sql(SQL, engine)
+            if len(df) == 0:
+                break
+            i += 1
+            yield df
 
 SOURCE_TYPE_TO_READER_CLS = {
     "csv" : CSVReader,
+    "postgresql": PGReader
 }
