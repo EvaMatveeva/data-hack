@@ -1,17 +1,18 @@
 from abc import ABC, abstractmethod
 import pandas as pd
+from pyspark.sql import SparkSession
+from datetime import datetime
 
 class AbstractLoader(ABC):
     def __init__(self, config) -> None:
         super().__init__()
         self.fields = config["fields"]
         self.target_table = config["target_table"]
-
+        self.load_type = config["load_type"]
 
     @abstractmethod
     def load(self, df: pd.DataFrame):
         pass
-
 
 class TestLoader(AbstractLoader):
     def __init__(self, config) -> None:
@@ -26,7 +27,22 @@ class TestLoader(AbstractLoader):
             df.to_csv(self.target_table, mode='a', header=False, index=False)
         
 
+class SparkLoader(AbstractLoader):
+    def __init__(self, config) -> None:
+        super().__init__(config)
+
+    def load(self, df: pd.DataFrame):
+        spark = SparkSession \
+                .builder \
+                .appName("Python Spark SQL basic example") \
+                .getOrCreate()
+        spark_result_path = f"../spark_results/raw_data/{self.target_table}"
+        df['valid_from'] = datetime.now()
+        df = spark.createDataFrame(df)
+        df.write.mode(self.load_type).parquet(spark_result_path)
 
 LOAD_TYPE_TO_LOADER_CLS = {
-    "test" : TestLoader
+    "test" : TestLoader,
+    "append": SparkLoader,
+    "overwrite": SparkLoader,
 }
