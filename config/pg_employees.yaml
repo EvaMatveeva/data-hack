@@ -1,5 +1,6 @@
 source_type: postgresql
 load_type: append
+batch_size: 500
 source_table: public.companies
 target_table: pg_public__employees
 fields:
