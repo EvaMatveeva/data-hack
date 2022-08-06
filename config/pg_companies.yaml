@@ -1,0 +1,9 @@
+source_type: postgresql
+load_type: overwrite
+source_table: public.companies
+target_table: pg_public__companies
+fields:
+    id: int
+    name: varchar(255)
+    created_at: date
+key_column: id
