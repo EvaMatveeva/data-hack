@@ -1,5 +1,6 @@
 source_type: postgresql
 load_type: overwrite
+batch_size: 10000
 source_table: public.companies
 target_table: pg_public__companies
 fields:

@@ -1,6 +1,7 @@
 --csv
 source_type: csv
 load_type: overwrite, append,
+batch_size: n
 file_path: /skdjcjsd/sdckk.csv
 target_table: name
 fields:
@@ -12,6 +13,7 @@ key_column: id
 --db
 source_type: postgresql
 load_type: overwrite, append,
+batch_size: n
 source_table: stroka_db
 target_table:
 fields:
