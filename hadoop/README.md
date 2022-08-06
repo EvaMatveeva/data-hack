@@ -1,63 +1,94 @@
-[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/big-data-europe/Lobby)
+# Hadoop Single Node Cluster on Docker.
 
-# Changes
+Following this steps you can build and use the image to create a Hadoop Single Node Cluster containers.
 
-Version 2.0.0 introduces uses wait_for_it script for the cluster startup
+## Creating the hadoop image
 
-# Hadoop Docker
+     $ git clone https://github.com/rancavil/hadoop-single-node-cluster.git
+     $ cd hadoop-single-node-cluster
+     $ docker build -t hadoop .
 
-## Supported Hadoop Versions
-See repository branches for supported hadoop versions
+## Creating the container
 
-## Quick Start
+To run and create a container execute the next command:
 
-To deploy an example HDFS cluster, run:
-```
-  docker-compose up
-```
+     $ docker run -it --name <container-name> -p 9864:9864 -p 9870:9870 -p 8088:8088 --hostname <your-hostname> hadoop
 
-Run example wordcount job:
-```
-  make wordcount
-```
+Change **container-name** by your favorite name and set **your-hostname** with by your ip or name machine. You can use **localhost** as your-hostname
 
-Or deploy in swarm:
-```
-docker stack deploy -c docker-compose-v3.yml hadoop
-```
+When you run the container, at the entrypoint you use the docker-entrypoint.sh shell that creates and starts the hadoop environment.
 
-`docker-compose` creates a docker network that can be found by running `docker network list`, e.g. `dockerhadoop_default`.
+You should get the following prompt:
 
-Run `docker network inspect` on the network (e.g. `dockerhadoop_default`) to find the IP the hadoop interfaces are published on. Access these interfaces with the following URLs:
+     hduser@localhost:~$ 
 
-* Namenode: http://<dockerhadoop_IP_address>:9870/dfshealth.html#tab-overview
-* History server: http://<dockerhadoop_IP_address>:8188/applicationhistory
-* Datanode: http://<dockerhadoop_IP_address>:9864/
-* Nodemanager: http://<dockerhadoop_IP_address>:8042/node
-* Resource manager: http://<dockerhadoop_IP_address>:8088/
+To check if hadoop container is working go to the url in your browser.
 
-## Configure Environment Variables
+     http://localhost:9870
 
-The configuration parameters can be specified in the hadoop.env file or as environmental variables for specific services (e.g. namenode, datanode etc.):
-```
-  CORE_CONF_fs_defaultFS=hdfs://namenode:8020
-```
+**Notice:** the hdfs-site.xml configure has the property, so don't use it in a production environment.
 
-CORE_CONF corresponds to core-site.xml. fs_defaultFS=hdfs://namenode:8020 will be transformed into:
-```
-  <property><name>fs.defaultFS</name><value>hdfs://namenode:8020</value></property>
-```
-To define dash inside a configuration parameter, use triple underscore, such as YARN_CONF_yarn_log___aggregation___enable=true (yarn-site.xml):
-```
-  <property><name>yarn.log-aggregation-enable</name><value>true</value></property>
-```
+     <property>
+          <name>dfs.permissions</name>
+          <value>false</value>
+     </property>
 
-The available configurations are:
-* /etc/hadoop/core-site.xml CORE_CONF
-* /etc/hadoop/hdfs-site.xml HDFS_CONF
-* /etc/hadoop/yarn-site.xml YARN_CONF
-* /etc/hadoop/httpfs-site.xml HTTPFS_CONF
-* /etc/hadoop/kms-site.xml KMS_CONF
-* /etc/hadoop/mapred-site.xml  MAPRED_CONF
+## A first example
 
-If you need to extend some other configuration file, refer to base/entrypoint.sh bash script.
+Make the HDFS directories required to execute MapReduce jobs:
+
+     hduser@localhost:~$ hdfs dfs -mkdir /user
+     hduser@localhost:~$ hdfs dfs -mkdir /user/hduser
+
+Copy the input files into the distributed filesystem:
+      
+     hduser@localhost:~$ hdfs dfs -mkdir input
+     hduser@localhost:~$ hdfs dfs -put $HADOOP_HOME/etc/hadoop/*.xml input
+
+Run some of the examples provided:
+
+     hduser@localhost:~$ hadoop jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.3.jar grep input output 'dfs[a-z.]+'
+
+     2020-08-08 01:57:02,411 INFO impl.MetricsConfig: Loaded properties from hadoop-metrics2.properties
+     2020-08-08 01:57:04,754 INFO impl.MetricsSystemImpl: Scheduled Metric snapshot period at 10 second(s).
+     2020-08-08 01:57:04,754 INFO impl.MetricsSystemImpl: JobTracker metrics system started
+     2020-08-08 01:57:08,843 INFO input.FileInputFormat: Total input files to process : 10
+     ..............
+     .............
+     ............
+     File Input Format Counters 
+          Bytes Read=175
+     File Output Format Counters 
+          Bytes Written=47
+
+Examine the output files: check the output files from the distributed filesystem and examine them:
+
+     hduser@localhost:~$ hdfs dfs -ls output/
+     Found 2 items
+     -rw-r--r--   1 hduser supergroup          0 2020-08-08 01:58 output/_SUCCESS
+     -rw-r--r--   1 hduser supergroup         47 2020-08-08 01:58 output/part-r-00000
+
+Checking the result using **cat** command on the distributed filesystem:
+
+     hduser@localhost:~$ hdfs dfs -cat output/*
+     1	dfsadmin
+     1	dfs.replication
+     1	dfs.permissions
+
+
+## Stopping and re-starting the container
+
+To stop the container execute the following commands, to gratefully shutdown.
+
+     hduser@localhost:~$ stop-dfs.sh
+     hduser@localhost:~$ stop-yarn.sh
+
+After that.
+
+     hduser@localhost:~$ exit
+
+To re-start the container, and go back to our Hadoop environment execute:
+
+     $ docker start -i <container-name>
+
+
