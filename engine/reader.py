@@ -40,9 +40,9 @@ class PGReader(AbstractReader):
         i = 0
         while True:
             SQL = f"""
-            select {fields_names} from {source_table} where {key_column} between {i * batch_size} and {(i + 1) * batch_size - 1}
+            select {self.fields_names} from {self.source_table} where {self.key_column} between {i * self.batch_size} and {(i + 1) * self.batch_size - 1}
             """
-            df = pd.read_sql(SQL, engine)
+            df = pd.read_sql(SQL, self.engine)
             if len(df) == 0:
                 break
             i += 1
