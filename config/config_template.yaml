@@ -1,0 +1,18 @@
+--csv
+source_type: csv
+file_path: /skdjcjsd/sdckk.csv
+load_type: overwrite, append,
+target_table: name
+fields:
+    column1_name: column_type
+    column2_name: column_type
+    ...
+    
+--db
+source_type: postgresql
+source_table: stroka_db
+load_type: overwrite, append,
+target_table:
+fields:
+    column1_name: column_type
+    column2_name: column_type
