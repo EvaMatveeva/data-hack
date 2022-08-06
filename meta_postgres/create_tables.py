@@ -55,7 +55,7 @@ CREATE TABLE companies (
 
 # df_employee
 engine.execute("""
-CREATE TABLE IF employees (
+CREATE TABLE employees (
     first_name varchar(255),
     last_name varchar(255),
     company_id int,
