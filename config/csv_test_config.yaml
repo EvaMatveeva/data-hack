@@ -1,0 +1,9 @@
+source_type: csv
+file_path: ../src_csv/spotify_reviews.csv
+load_type: test
+target_table: ../result.csv
+batch_size: 10000
+fields:
+  Time_submitted: str
+  Rating: int
+  Total_thumbsup: int
