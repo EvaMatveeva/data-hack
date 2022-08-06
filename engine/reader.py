@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-
+from sqlalchemy import create_engine
 import pandas as pd
 
 from type_mappings import CSV_MAPPING
@@ -34,6 +34,7 @@ class PGReader(AbstractReader):
         self.fields_names = ', '.join(config["fields"].keys())
         self.source_table = config["source_table"]
         self.key_column = config["key_column"]
+        self.engine = create_engine("postgresql://test_user:1234@localhost:5432/sourse_db")
 
     def read(self):
         i = 0
