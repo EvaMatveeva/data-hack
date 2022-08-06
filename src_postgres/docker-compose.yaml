@@ -1,11 +1,11 @@
 version: '3.1'
 
 services:
-  postgres:
+  source_postgres:
     image: postgres:12-alpine
     restart: always
     environment:
-      POSTGRES_DB: "sourse_db"
+      POSTGRES_DB: "source_db"
       POSTGRES_USER: "test_user"
       POSTGRES_PASSWORD: "1234"
     ports:
@@ -14,4 +14,4 @@ services:
     build:
       context: .
     depends_on:
-      - "postgres"
+      - "source_postgres"

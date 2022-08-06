@@ -1,10 +1,12 @@
 # Imports
 
 from sqlalchemy import create_engine
-import pandas as pd
+import time
 
+# Waiting for database !!! Причина не ясна
+time.sleep(10)
 # Creating meta tables
-engine = create_engine("postgresql://test_user:1234@localhost:4321/sourse_db")
+engine = create_engine("postgresql://test_user:1234@meta_postgres:5432/meta_db")
 
 engine.execute("""create schema meta""")
 
