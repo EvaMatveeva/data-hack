@@ -1,7 +1,6 @@
 from reader import SOURCE_TYPE_TO_READER_CLS
 from loader import LOAD_TYPE_TO_LOADER_CLS
 
-
 class Runner:
     def __init__(self, config) -> None:
         source_type = config["source_type"]
