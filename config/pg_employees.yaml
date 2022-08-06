@@ -1,0 +1,13 @@
+source_type: postgresql
+load_type: append
+source_table: public.companies
+target_table: pg_public__employees
+fields:
+    id: int
+    first_name: varchar(255)
+    last_name: varchar(255)
+    company_id: int
+    phone: varchar(50)
+    start_at: date
+    end_at: date
+key_column: id
