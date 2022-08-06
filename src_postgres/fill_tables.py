@@ -10,7 +10,7 @@ fake = Faker()
 
 # Creating dfs
 df_company = pd.DataFrame(columns=['id', 'name', 'created_at'])
-df_employee = pd.DataFrame(columns=['first_name', 'last_name', 'company_id', 'phone', 'start_at', 'end_at'])
+df_employee = pd.DataFrame(columns=['id', 'first_name', 'last_name', 'company_id', 'phone', 'start_at', 'end_at'])
 
 # Filling the dfs
 # df_company
@@ -21,6 +21,7 @@ for i in range(500):
 # df_employee
 n = len(df_company) * 3
 for j in range(n):
+    idx = j + 1
     first_name = fake.first_name()
     last_name = fake.last_name()
     company_id = random.choice(df_company['id'])
@@ -38,7 +39,7 @@ for j in range(n):
             ),
             None]
         )
-    l = [first_name, last_name, company_id, phone, start_at, end_at]
+    l = [idx, first_name, last_name, company_id, phone, start_at, end_at]
     df_employee.loc[j] = l
 
 engine = create_engine("postgresql://test_user:1234@postgres:5432/sourse_db")
@@ -56,6 +57,7 @@ CREATE TABLE companies (
 # df_employee
 engine.execute("""
 CREATE TABLE employees (
+    id int not null,
     first_name varchar(255),
     last_name varchar(255),
     company_id int,
