@@ -42,7 +42,7 @@ for j in range(n):
     l = [idx, first_name, last_name, company_id, phone, start_at, end_at]
     df_employee.loc[j] = l
 
-engine = create_engine("postgresql://test_user:1234@postgres:5432/sourse_db")
+engine = create_engine("postgresql://test_user:1234@source_postgres:5432/source_db")
 
 # Creating tables
 # df_company

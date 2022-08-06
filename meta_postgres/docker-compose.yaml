@@ -1,17 +1,17 @@
 version: '3.1'
 
 services:
-  postgres:
+  meta_postgres:
     image: postgres:12-alpine
     restart: always
     environment:
-      POSTGRES_DB: "sourse_db"
+      POSTGRES_DB: "meta_db"
       POSTGRES_USER: "test_user"
       POSTGRES_PASSWORD: "1234"
     ports:
-     - "4321:5432"
-  fill:
+     - "5433:5432"
+  create:
     build:
       context: .
     depends_on:
-      - "postgres"
+      - "meta_postgres"
