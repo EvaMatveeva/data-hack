@@ -6,6 +6,8 @@ Repository for DATA HACK 2022
 - **engine** - необходимые для ETL методы: reader, loader, runner
 - **src_postgres** - сборка и запуск PostgreSQL, в котором автоматически генерируется тестовый набор данных
 - **meta_postgres** - сборка и запуск PostgreSQL, в котором создается таблица для логирования
+- **spark_results** - папка, в которую по слоям записываются parquet-файлы
+
 ---
 ## Включение окружения
 ```shell
@@ -13,6 +15,7 @@ conda create --name datahack python=3.9
 conda activate datahack
 pip install -r requirements.txt
 ```
+
 ---
 ## Сборка и запуск PostgreSQL-источника и PostgreSQL для логирования
 
