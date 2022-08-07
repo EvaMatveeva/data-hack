@@ -7,7 +7,13 @@ Repository for DATA HACK 2022
 - **src-postgres** - сборка и запуск PostgreSQL, в котором автоматически генерируется тестовый набор данных
 - **meta-postgres** - сборка и запуск PostgreSQL, в котором создается таблица для логирования
 ---
-
+## Включение окружения
+```shell
+conda create --name datahack python=3.9
+conda activate datahack
+pip install -r requirements.txt
+```
+---
 ## Сборка и запуск PostgreSQL-источника и PostgreSQL для логирования
 
 ```shell
