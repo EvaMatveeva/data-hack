@@ -9,7 +9,6 @@ Repository for DATA HACK 2022
 
 `python run_engine.py --path-to-config path_to_config`
 
-**T0DO**
 ---
 ## Правила нейминга таблиц
 **T0DO**
