@@ -6,7 +6,6 @@ Repository for DATA HACK 2022
 - **engine** - необходимые для ETL методы: reader, loader, runner
 
 ## Запуск из консоли
-
 python run_engine.py --path-to-config path_to_config
 **T0DO**
 ---
