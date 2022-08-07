@@ -48,7 +48,8 @@ class SparkLoader(AbstractLoader):
             df = spark.createDataFrame(df)
             df.write.mode(self.load_type).parquet(spark_result_path)
             logger.log("LOAD", "SUCCESS")
-        except:
+        except Exception as e:
+            print(e)
             logger.log("LOAD", "ERROR")
 
 LOAD_TYPE_TO_LOADER_CLS = {

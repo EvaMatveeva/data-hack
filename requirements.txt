@@ -1,0 +1,6 @@
+click
+pyyaml
+SQLAlchemy
+pandas
+pyspark
+psycopg2-binary
