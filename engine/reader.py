@@ -25,7 +25,6 @@ class CSVReader(AbstractReader):
         self.dtypes = {k : CSV_MAPPING[v] for k, v in self.fields.items()}
 
     def read(self):
-        # TODO: column from self.fields
         logger = Logger(self.config)
         logger.log("READ", "START")
         try:
@@ -43,7 +42,7 @@ class PGReader(AbstractReader):
         self.fields_names = ', '.join(config["fields"].keys())
         self.source_table = config["source_table"]
         self.key_column = config["key_column"]
-        self.engine = create_engine("postgresql://test_user:1234@localhost:5432/sourse_db")
+        self.engine = create_engine("postgresql://test_user:1234@localhost:5432/source_db")
 
     def read(self):
         logger = Logger(self.config)
@@ -60,7 +59,8 @@ class PGReader(AbstractReader):
                 i += 1
                 yield df
             logger.log("READ", "SUCCESS")
-        except:
+        except Exception as e:
+            print(e)
             logger.log("READ", "ERROR")
 
 

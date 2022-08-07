@@ -7,8 +7,10 @@ from datetime import datetime
 class AbstractLogger(ABC):
     def __init__(self, config) -> None:
         super().__init__()
-        self.source_table = config["source_table"]
-
+        if "source_table" in config:
+            self.source_table = config["source_table"]
+        else:
+            self.source_table = config["file_path"]
     @abstractmethod
     def log(self, operation_type, log_state):
         pass
@@ -17,11 +19,12 @@ class AbstractLogger(ABC):
 class Logger(AbstractLogger):
     def __init__(self, config) -> None:
         super().__init__(config)
-        self.engine = create_engine("postgresql://test_user:1234@meta_postgres:5432/meta_db")
+        self.engine = create_engine("postgresql://test_user:1234@localhost:5433/meta_db")
 
     def log(self, operation_type, log_state):
         SQL = f"""
         insert into meta.logging 
-        select {self.source_table}, {operation_type}, {log_state}, {datetime.now()}
+        select '{self.source_table}', '{operation_type}', '{log_state}', '{datetime.now()}'
         """
-        pd.read_sql(SQL, self.engine)
+        print(f'{self.source_table}, {operation_type}, {log_state}, {datetime.now()}')
+        self.engine.execute(SQL)
