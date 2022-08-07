@@ -4,3 +4,4 @@ SQLAlchemy
 pandas
 pyspark
 psycopg2-binary
+pyarrow
