@@ -14,7 +14,6 @@ engine.execute("""
     create table meta.logging (
     	table_name varchar(255),
     	operation_type varchar(50),
-    	log_message text,
     	log_state varchar(50),
     	log_dttm timestamp
     )

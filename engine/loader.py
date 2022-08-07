@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import pandas as pd
 from pyspark.sql import SparkSession
 from datetime import datetime
+from logger import Logger
 
 class AbstractLoader(ABC):
     def __init__(self, config) -> None:
@@ -9,6 +10,7 @@ class AbstractLoader(ABC):
         self.fields = config["fields"]
         self.target_table = config["target_table"]
         self.load_type = config["load_type"]
+        self.config = config
 
     @abstractmethod
     def load(self, df: pd.DataFrame):
@@ -20,6 +22,8 @@ class TestLoader(AbstractLoader):
         self.first_batch = True
 
     def load(self, df: pd.DataFrame):
+        logger = Logger(self.config)
+        logger.log("LOAD", "START")
         if self.first_batch:
             df.to_csv(self.target_table, index=False)
             self.first_batch = False
@@ -32,14 +36,20 @@ class SparkLoader(AbstractLoader):
         super().__init__(config)
 
     def load(self, df: pd.DataFrame):
-        spark = SparkSession \
+        logger = Logger(self.config)
+        logger.log("LOAD", "START")
+        try:
+            spark = SparkSession \
                 .builder \
                 .appName("Python Spark SQL basic example") \
                 .getOrCreate()
-        spark_result_path = f"../spark_results/raw_data/{self.target_table}"
-        df['valid_from'] = datetime.now()
-        df = spark.createDataFrame(df)
-        df.write.mode(self.load_type).parquet(spark_result_path)
+            spark_result_path = f"../spark_results/raw_data/{self.target_table}"
+            df['valid_from'] = datetime.now()
+            df = spark.createDataFrame(df)
+            df.write.mode(self.load_type).parquet(spark_result_path)
+            logger.log("LOAD", "SUCCESS")
+        except:
+            logger.log("LOAD", "ERROR")
 
 LOAD_TYPE_TO_LOADER_CLS = {
     "test" : TestLoader,
